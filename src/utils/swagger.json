@@ -1,0 +1,277 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Lead Cron Manager - API documentation",
+    "description": "This is API documentation for Lead Cron Manager APIs",
+    "contact": {
+      "email": "abhishek@alignconnect.net"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:4000",
+      "description": "Local Server"
+    },
+    {
+      "url": "https://cron.alignlm.com",
+      "description": "Live Server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Website",
+      "description": "Add, Update, and Delete APIs"
+    },
+    {
+      "name": "Sync",
+      "description": "Sync APIs"
+    }
+  ],
+  "paths": {
+    "/website": {
+      "get": {
+        "tags": ["Website"],
+        "summary": "Get all websites",
+        "description": "Get all websites",
+        "operationId": "getWebsites",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responseBodies/GetWebsitesBody"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer_token": []
+          }
+        ]
+      },
+      "post": {
+        "tags": ["Website"],
+        "summary": "Add a new website",
+        "description": "Add a new website",
+        "operationId": "addWebsite",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/PostWebsiteBody"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responseBodies/PostWebsitesBody"
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer_token": []
+          }
+        ]
+      }
+    },
+    "/website/{id}": {
+      "patch": {
+        "tags": ["Website"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Website Id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "summary": "Update a website",
+        "description": "Update a website",
+        "operationId": "updateWebsite",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/PostWebsiteBody"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responseBodies/PostWebsitesBody"
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer_token": []
+          }
+        ]
+      }
+    },
+    "/website/sync": {
+      "get": {
+        "tags": ["Sync"],
+        "summary": "Sync data from all websites",
+        "description": "Sync data from all websites",
+        "operationId": "syncData",
+        "responses": {
+          "200": {}
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "Website": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "manhealthguru.in"
+          },
+          "url": {
+            "type": "string",
+            "example": "https://www.manhealthguru.in/api/sync"
+          },
+          "autoSync": {
+            "type": "boolean",
+            "example": false
+          }
+        }
+      },
+      "Id": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "cl8l8h0ac0000eaq00k683l4b"
+          }
+        }
+      }
+    },
+    "requestBodies": {
+      "PostWebsiteBody": {
+        "description": "Website object that needs to be added",
+        "content": {
+          "application/json": {
+            "schema": {
+              "required": ["name", "url", "autoSync", "token"],
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/Website"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string",
+                      "example": "your_token_here"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "required": true
+      }
+    },
+    "responseBodies": {
+      "GetWebsitesBody": {
+        "description": "Website object",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Id"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Website"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "PostWebsitesBody": {
+        "description": "Website object that would be returned",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Id"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Website"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearer_token": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
